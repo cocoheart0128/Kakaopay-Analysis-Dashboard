@@ -36,13 +36,23 @@ if uploaded_file is not None:
             df.loc[i,'pay_type']='오픈라인'
         else:
             df.loc[i,'pay_type']='온라인'
-
+    df_month=pd.DataFrame(df['yyyymm'].drop_duplicates().reset_index(drop=True))
+    df_day=pd.DataFrame(df['yyyymmdd'].drop_duplicates().reset_index(drop=True))
+    df_type=pd.DataFrame(df['거래구분'].drop_duplicates().reset_index(drop=True))
+    df_month['tmp'] = 1
+    df_day['tmp']=1
+    df_type['tmp'] = 1
+    df0=pd.merge(df_month, df_type)[['yyyymm','거래구분']]
+    df0.columns=['거래연월', '거래구분']
+    df1=pd.merge(df_day, df_type)[['yyyymmdd','거래구분']]
+    df1.columns=['거래연월일', '거래구분']
+##
     with st.expander('Filter'):
         add_selectbox = st.selectbox('분석기준', ('연도별','월별','일별'))
 
     if add_selectbox == '연도별':
         add_selectbox1 = st.selectbox('YEAR', tuple(df['yyyy'].drop_duplicates().tolist()))
-        st.subheader('사용내역 Summary')
+        st.subheader('연도별 사용내역 Summary')
         df_pay_year = df.groupby(['yyyy','거래구분'])[['거래금액']].agg(['sum','count']).reset_index()
         df_pay_year.columns=['거래연도','거래구분','거래금액','거래횟수']
         df_pay_year_select = df_pay_year[df_pay_year['거래연도']==add_selectbox1].reset_index(drop=True)
@@ -91,40 +101,103 @@ if uploaded_file is not None:
         
     elif add_selectbox == '월별':
         add_selectbox2 = st.selectbox('YEAR-MONTH', tuple(df['yyyymm'].drop_duplicates().tolist()))
+        st.subheader('월별 사용내역 Summary')
         df_pay_month = df.groupby(['yyyymm','거래구분'])[['거래금액']].agg(['sum','count']).reset_index()
         df_pay_month.columns=['거래연월','거래구분','거래금액','거래횟수']
+        df_pay_month=pd.merge(df0,df_pay_month,on=['거래연월', '거래구분'], how='left' )
+        df_pay_month.fillna(0, inplace=True)
         df_pay_month_select = df_pay_month[df_pay_month['거래연월']==add_selectbox2].reset_index(drop=True)
         date_obj=datetime.strptime(add_selectbox2, '%Y-%m')
         previous_month = date_obj - timedelta(days=date_obj.day)
         previous_month_str = previous_month.strftime('%Y-%m')
         df_pay_month_select_2022 = df_pay_month[df_pay_month['거래연월']==str(previous_month_str)].reset_index(drop=True)
 
+        df_pay_month_select['거래금액_증감'] = (df_pay_month_select['거래금액'] - df_pay_month_select_2022['거래금액']) / df_pay_month_select_2022['거래금액']
+        df_pay_month_select['거래횟수_증감'] = (df_pay_month_select['거래횟수'] - df_pay_month_select_2022['거래횟수']) / df_pay_month_select_2022['거래횟수']
+
+
         col1, col2, col3, col4, col5 = st.columns(5)
         columns = [col1, col2, col3, col4, col5]
 
         for i,col in zip(range(len(df_pay_month_select)),columns):
-            col.metric(label= df_pay_month_select['거래구분'][i], value = df_pay_month_select['거래금액'][i])
+            col.metric(label= df_pay_month_select['거래구분'][i], value = int(df_pay_month_select['거래금액'][i]), delta = "{:.2%}".format(df_pay_month_select['거래금액_증감'][i]))
         for i,col in zip(range(len(df_pay_month_select)),columns):
-            col.metric(label= df_pay_month_select['거래구분'][i], value = df_pay_month_select['거래횟수'][i])
+            col.metric(label= df_pay_month_select['거래구분'][i], value = int(df_pay_month_select['거래횟수'][i]),delta = "{:.2%}".format(df_pay_month_select['거래금액_증감'][i]))
 
-        st.dataframe(df_pay_month_select)
-        st.dataframe(df_pay_month_select_2022)
+        df_pay_month2=df.groupby(['yyyymm','pay_type'])[['거래금액']].agg(['sum','count']).reset_index()
+        df_pay_month2.columns=['거래연월','거래용도','거래금액','거래횟수']
+        df_pay_month2_select = df_pay_month2[df_pay_month2['거래연월']==add_selectbox2].reset_index(drop=True)
 
-    # elif add_selectbox == '일별':
-    #     add_selectbox2 = st.selectbox('YEAR-MONTH-DAY', tuple(df['yyyymmdd'].drop_duplicates().tolist()))
-    #     df_pay_month = df.groupby(['yyyymm','거래구분'])[['거래금액']].agg(['sum','count']).reset_index()
-    #     df_pay_month.columns=['거래연월','거래구분','거래금액','거래횟수']
-    #     df_pay_month_select = df_pay_month[df_pay_month['거래연월']==add_selectbox2].reset_index(drop=True)
+        col1, col2= st.columns([2,1])
+        col1.subheader('거래용도별 사용금액')
 
-    #     col1, col2, col3, col4, col5 = st.columns(5)
-    #     columns = [col1, col2, col3, col4, col5]
+        chart = alt.Chart(df_pay_month2_select).mark_bar().encode(
+            x=alt.X('거래용도:N',axis=alt.Axis(labelAngle=0)),
+            y='거래금액:Q',color=alt.Color('거래용도:N', legend=None)  # Hide the legend
+        ).properties(width=400,height=300)
+        col1.altair_chart(chart, use_container_width=True)
 
-    #     for i,col in zip(range(len(df_pay_month_select)),columns):
-    #         col.metric(label= df_pay_month_select['거래구분'][i], value = df_pay_month_select['거래금액'][i])
-    #     for i,col in zip(range(len(df_pay_month_select)),columns):
-    #         col.metric(label= df_pay_month_select['거래구분'][i], value = df_pay_month_select['거래횟수'][i])
 
-    #     st.dataframe(df_pay_month_select)
+        col2.subheader('거래용도별 사용횟수')
+        fig, ax = plt.subplots(figsize=(2,2))
+        ax.pie(df_pay_month2_select['거래횟수'], labels=df_pay_month2_select['거래용도'], autopct='%1.1f%%',
+                shadow=False, startangle=90)
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        col2.pyplot(fig)
+
+        st.subheader('사용 내역')
+        st.dataframe(df.drop(['계좌 정보 / 결제 정보','은행'],axis=1),width=5000000)
+
+    elif add_selectbox == '일별':
+        add_selectbox3 = st.selectbox('YEAR-MONTH-DAY', tuple(df['yyyymmdd'].drop_duplicates().tolist()))
+        st.subheader('일별 사용내역 Summary')
+        df_pay_day = df.groupby(['yyyymmdd','거래구분'])[['거래금액']].agg(['sum','count']).reset_index()
+        df_pay_day.columns=['거래연월일','거래구분','거래금액','거래횟수']
+        df_pay_day=pd.merge(df1,df_pay_day,on=['거래연월일', '거래구분'], how='left' )
+        df_pay_day.fillna(0, inplace=True)
+        df_pay_day_select = df_pay_day[df_pay_day['거래연월일']==add_selectbox3].reset_index(drop=True)
+        date_obj=datetime.strptime(add_selectbox3, '%Y-%m-%d')
+        previous_day = date_obj - timedelta(days=1)
+        previous_day_str = previous_day.strftime('%Y-%m-%d')
+        df_pay_day_select_2022 = df_pay_day[df_pay_day['거래연월일']==str(previous_day_str)].reset_index(drop=True)
+
+        df_pay_day_select['거래금액_증감'] = (df_pay_day_select['거래금액'] - df_pay_day_select_2022['거래금액']) / df_pay_day_select_2022['거래금액']
+        df_pay_day_select['거래횟수_증감'] = (df_pay_day_select['거래횟수'] - df_pay_day_select_2022['거래횟수']) / df_pay_day_select_2022['거래횟수']
+
+
+        col1, col2, col3, col4, col5 = st.columns(5)
+        columns = [col1, col2, col3, col4, col5]
+
+        for i,col in zip(range(len(df_pay_day_select)),columns):
+            col.metric(label= df_pay_day_select['거래구분'][i], value = int(df_pay_day_select['거래금액'][i]), delta = "{:.2%}".format(df_pay_day_select['거래금액_증감'][i]))
+        for i,col in zip(range(len(df_pay_day_select)),columns):
+            col.metric(label= df_pay_day_select['거래구분'][i], value = int(df_pay_day_select['거래횟수'][i]),delta = "{:.2%}".format(df_pay_day_select['거래금액_증감'][i]))
+
+        df_pay_day2=df.groupby(['yyyymmdd','pay_type'])[['거래금액']].agg(['sum','count']).reset_index()
+        df_pay_day2.columns=['거래연월일','거래용도','거래금액','거래횟수']
+        df_pay_day2_select = df_pay_day2[df_pay_day2['거래연월일']==add_selectbox3].reset_index(drop=True)
+
+        col1, col2= st.columns([2,1])
+        col1.subheader('거래용도별 사용금액')
+
+        chart = alt.Chart(df_pay_day2_select).mark_bar().encode(
+            x=alt.X('거래용도:N',axis=alt.Axis(labelAngle=0)),
+            y='거래금액:Q',color=alt.Color('거래용도:N', legend=None)  # Hide the legend
+        ).properties(width=400,height=300)
+        col1.altair_chart(chart, use_container_width=True)
+
+
+        col2.subheader('거래용도별 사용횟수')
+        fig, ax = plt.subplots(figsize=(2,2))
+        ax.pie(df_pay_day2_select['거래횟수'], labels=df_pay_day2_select['거래용도'], autopct='%1.1f%%',
+                shadow=False, startangle=90)
+        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        col2.pyplot(fig)
+
+        st.subheader('사용 내역')
+        st.dataframe(df.drop(['계좌 정보 / 결제 정보','은행'],axis=1),width=5000000)
 
 
 if uploaded_file is None:
