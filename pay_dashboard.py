@@ -11,7 +11,7 @@ from io import BytesIO
 plt.rcParams['font.family'] ='Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] =False
 
-st.set_page_config(page_title="카드사용내역", page_icon="🧊",layout="wide",font="Malgun Gothic")
+st.set_page_config(page_title="카드사용내역", page_icon="🧊",layout="wide")
 
 response = requests.get("https://www.inthenews.co.kr/data/photos/20211147/art_16377156873611_4ed3cc.png")
 image_data = BytesIO(response.content)
