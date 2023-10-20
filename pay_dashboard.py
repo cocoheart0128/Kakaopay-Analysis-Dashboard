@@ -18,10 +18,11 @@ image_data = BytesIO(response.content)
 image = Image.open(image_data)
 st.sidebar.image(image)
 
-# st.title("Users Payment Analysis Dashboard")
 st.markdown("<h1 style='text-align: center;'>Users Payment Analysis Dashboard</h1>", unsafe_allow_html=True)
 st.sidebar.title('파일 업로드')
-uploaded_file = st.sidebar.file_uploader("Choose a file")
+
+uploaded_file = st.sidebar.file_uploader("Choose a file",type='csv',key='file_uploader')
+
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file,encoding='utf-8')
 ##데이터 전처리
