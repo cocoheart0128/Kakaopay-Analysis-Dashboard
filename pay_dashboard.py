@@ -48,7 +48,7 @@ if uploaded_file is not None:
     df1=pd.merge(df_day, df_type)[['yyyymmdd','거래구분']]
     df1.columns=['거래연월일', '거래구분']
 ##
-    col1, col2 = st.columns(2)
+    a, col1, col2, c = st.columns([1,2,2,1])
     add_selectbox = col1.selectbox('분석기준', ('연도별','월별','일별'))
     st.write('')
 
