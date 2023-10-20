@@ -5,3 +5,4 @@ pandas
 numpy
 altair
 datetime
+fonts-nanum
