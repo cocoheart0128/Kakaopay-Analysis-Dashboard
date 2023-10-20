@@ -4,11 +4,9 @@
 ##### Demo link : [https://kakaopay-analysis-dashboard-ghtqwq4skso3jfptkobnvl.streamlit.app/](https://kakaopay-analysis-dashboard-du6jbk5wxjiwk3sffaxgky.streamlit.app/)
 
 ##### Demo GIF :
-## <img src="https://github.com/cocoheart0128/Kakaopay-Analysis-Dashboard/assets/130530818/b9a4fec0-5502-4dab-9bd6-3d277178d024  width="200" height="400"/>
 
+<img src="https://github.com/cocoheart0128/Kakaopay-Analysis-Dashboard/raw/branch-name/assets/130530818/b9a4fec0-5502-4dab-9bd6-3d277178d024.gif" width="400" height="300" alt="Alt Text">
 
-
-# ![Kakaopay_analysis_Demo](https://github.com/cocoheart0128/Kakaopay-Analysis-Dashboard/assets/130530818/b9a4fec0-5502-4dab-9bd6-3d277178d024)
 
 
 
