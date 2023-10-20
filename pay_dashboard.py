@@ -8,8 +8,8 @@ import plotly.express as px
 import requests
 from io import BytesIO
 
-plt.rcParams['font.family'] ='Malgun Gothic'
-plt.rcParams['axes.unicode_minus'] =False
+# plt.rcParams['font.family'] ='Malgun Gothic'
+# plt.rcParams['axes.unicode_minus'] =False
 
 st.set_page_config(page_title="카드사용내역", page_icon="🧊",layout="wide")
 
