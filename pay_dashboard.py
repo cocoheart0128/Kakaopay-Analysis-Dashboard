@@ -5,13 +5,17 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import altair as alt
 import plotly.express as px
+import requests
+from io import BytesIO
 
 plt.rcParams['font.family'] ='Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] =False
 
 st.set_page_config(page_title="카드사용내역", page_icon="🧊",layout="wide")
 
-image = Image.open('C:/Users/MZC01-KEXIN/Desktop/streamlit/kakaopay_analysis/kakao_img.png')
+response = requests.get("https://www.inthenews.co.kr/data/photos/20211147/art_16377156873611_4ed3cc.png")
+image_data = BytesIO(response.content)
+image = Image.open(image_data)
 st.sidebar.image(image)
 
 # st.title("Users Payment Analysis Dashboard")
