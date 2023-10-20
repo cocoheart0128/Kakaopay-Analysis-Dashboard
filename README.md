@@ -5,7 +5,7 @@
 
 ##### Demo GIF :
 
-<img src="https://github.com/cocoheart0128/Kakaopay-Analysis-Dashboard/raw/branch-name/assets/130530818/b9a4fec0-5502-4dab-9bd6-3d277178d024.gif" width="400" height="300" alt="Alt Text">
+<img src="" width="400" height="300" alt="Alt Text">
 
 
 
