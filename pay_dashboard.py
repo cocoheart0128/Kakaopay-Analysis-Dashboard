@@ -8,8 +8,8 @@ import plotly.express as px
 import requests
 from io import BytesIO
 
-plt.rcParams['font.family'] ='Malgun Gothic'
-plt.rcParams['axes.unicode_minus'] =False
+# plt.rcParams['font.family'] ='Malgun Gothic'
+# plt.rcParams['axes.unicode_minus'] =False
 
 st.set_page_config(page_title="카드사용내역", page_icon="🧊",layout="wide")
 
@@ -86,21 +86,26 @@ if uploaded_file is not None:
 
         chart = alt.Chart(df_pay_year2_select).mark_bar().encode(
             x=alt.X('거래용도:N',axis=alt.Axis(labelAngle=0)),
-            y='거래금액:Q',color=alt.Color('거래용도:N', legend=None)  # Hide the legend
-        ).properties(width=400,height=300)
+            y='거래금액:Q',color=alt.Color('거래용도:N', legend=None) 
+        ).properties(width=400,height=450)
         col1.altair_chart(chart, use_container_width=True)
 
 
         col2.subheader('사용처별 사용횟수')
-        fig, ax = plt.subplots(figsize=(2,2))
-        ax.pie(df_pay_year2_select['거래횟수'], labels=df_pay_year2_select['거래용도'], autopct='%1.1f%%',
-                shadow=False, startangle=90)
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        fig = px.pie(df_pay_year2_select,values = "거래횟수", names = "거래용도", template = "plotly_white",
+                     color_discrete_sequence=px.colors.sequential.RdBu)
+        col2.plotly_chart(fig, use_container_width=True)
 
-        col2.pyplot(fig)
+
+        # fig, ax = plt.subplots(figsize=(2,2))
+        # ax.pie(df_pay_year2_select['거래횟수'], labels=df_pay_year2_select['거래용도'], autopct='%1.1f%%',
+        #         shadow=False, startangle=90)
+        # ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+        # col2.pyplot(fig)
 
         # fig=alt.Chart(df_pay_year2_select).mark_arc().encode(theta="거래횟수",color="거래용도")
-        # st.altair_chart(fig,use_container_width=True)
+        # col2.altair_chart(fig,use_container_width=True)
         # col1, col2, col3 = st.columns([1,2,1])
         # with col2:
         st.subheader('상세 사용 내역')
@@ -146,17 +151,14 @@ if uploaded_file is not None:
         chart = alt.Chart(df_pay_month2_select).mark_bar().encode(
             x=alt.X('거래용도:N',axis=alt.Axis(labelAngle=0)),
             y='거래금액:Q',color=alt.Color('거래용도:N', legend=None)  # Hide the legend
-        ).properties(width=400,height=300)
+        ).properties(width=400,height=450)
         col1.altair_chart(chart, use_container_width=True)
 
 
         col2.subheader('사용처별 사용횟수')
-        fig, ax = plt.subplots(figsize=(2,2))
-        ax.pie(df_pay_month2_select['거래횟수'], labels=df_pay_month2_select['거래용도'], autopct='%1.1f%%',
-                shadow=False, startangle=90)
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-        col2.pyplot(fig)
+        fig = px.pie(df_pay_month2_select,values = "거래횟수", names = "거래용도", template = "plotly_white",
+                     color_discrete_sequence=px.colors.sequential.RdBu)
+        col2.plotly_chart(fig, use_container_width=True)
         
 
         st.subheader('상세 사용 내역')
@@ -201,17 +203,14 @@ if uploaded_file is not None:
         chart = alt.Chart(df_pay_day2_select).mark_bar().encode(
             x=alt.X('거래용도:N',axis=alt.Axis(labelAngle=0)),
             y='거래금액:Q',color=alt.Color('거래용도:N', legend=None)  # Hide the legend
-        ).properties(width=400,height=300)
+        ).properties(width=400,height=450)
         col1.altair_chart(chart, use_container_width=True)
 
 
         col2.subheader('사용처별 사용횟수')
-        fig, ax = plt.subplots(figsize=(2,2))
-        ax.pie(df_pay_day2_select['거래횟수'], labels=df_pay_day2_select['거래용도'], autopct='%1.1f%%',
-                shadow=False, startangle=90)
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-        col2.pyplot(fig)
+        fig = px.pie(df_pay_day2_select,values = "거래횟수", names = "거래용도", template = "plotly_white",
+                     color_discrete_sequence=px.colors.sequential.RdBu)
+        col2.plotly_chart(fig, use_container_width=True)
         
         st.subheader('상세 사용 내역')
         df_show=df.drop(['계좌 정보 / 결제 정보','은행','거래일시'],axis=1)[['yyyymmdd','거래구분','거래금액','거래 후 잔액','pay_type']]
