@@ -1,1 +1,2 @@
 fonts-fontname
+fonts-nanum*
