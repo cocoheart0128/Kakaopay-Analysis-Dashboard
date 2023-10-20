@@ -3,6 +3,8 @@
 
 ##### Demo link : [https://kakaopay-analysis-dashboard-ghtqwq4skso3jfptkobnvl.streamlit.app/](https://kakaopay-analysis-dashboard-du6jbk5wxjiwk3sffaxgky.streamlit.app/)
 
-![image](https://github.com/cocoheart0128/Kakaopay-Analysis-Dashboard/assets/130530818/4758ffe5-6364-44b4-9122-a10f78f1e87d)
+##### Demo GIF :
+![Kakaopay_analysis_Demo](https://github.com/cocoheart0128/Kakaopay-Analysis-Dashboard/assets/130530818/b9a4fec0-5502-4dab-9bd6-3d277178d024)
+
 
 
