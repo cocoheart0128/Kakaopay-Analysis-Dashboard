@@ -3,7 +3,7 @@
 
 ##### I am not able to provide my dataset due to data is personal.
 
-##### Demo link : [https://kakaopay-analysis-dashboard-ghtqwq4skso3jfptkobnvl.streamlit.app/](https://kakaopay-analysis-dashboard-du6jbk5wxjiwk3sffaxgky.streamlit.app/)
+##### Demo link : https://kakaopay-analysis-dashboard-mdvfrdqpstuqruxgvauoct.streamlit.app/
 
 ##### Demo GIF :
 <p align='center'>
