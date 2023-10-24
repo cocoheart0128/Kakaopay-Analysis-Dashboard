@@ -1,4 +1,3 @@
-fonts-fontname
 fonts-nanum*
 default-jre
 korean*
