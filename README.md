@@ -1,5 +1,5 @@
 ## This is a Demo Dashboard for Kakaopay payment Analysis by using streamlit.
-##### Still making it continue (2023.10.16 ~ )
+##### Still making it continue (2023.10.16 ~ 2023.10.25)
 
 ##### I am not able to provide my dataset due to data is personal.
 
